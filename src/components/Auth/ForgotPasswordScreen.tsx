@@ -37,7 +37,7 @@ const ForgotPasswordScreen: React.FC = () => {
       <div 
         className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/30 to-slate-900 relative overflow-hidden"
         style={{
-          backgroundImage: `url('https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg?w=800&h=1200&fit=crop')`,
+          backgroundImage: `url('https://qjdrfskuxgaohczizdyq.supabase.co/storage/v1/object/public/micelleneous-images//forgot%20password.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
@@ -83,7 +83,7 @@ const ForgotPasswordScreen: React.FC = () => {
     <div 
       className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/30 to-slate-900 relative overflow-hidden"
       style={{
-        backgroundImage: `url('https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg?w=800&h=1200&fit=crop')`,
+        backgroundImage: `url('https://qjdrfskuxgaohczizdyq.supabase.co/storage/v1/object/public/micelleneous-images//forgot%20password.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}

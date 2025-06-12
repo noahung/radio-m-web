@@ -10,7 +10,7 @@ const WelcomeScreen: React.FC = () => {
     <div 
       className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/30 to-slate-900 relative overflow-hidden"
       style={{
-        backgroundImage: `url('https://qjdrfskuxgaohczizdyq.supabase.co/storage/v1/object/public/micelleneous-images//Radio.png')`,
+        backgroundImage: `url('https://qjdrfskuxgaohczizdyq.supabase.co/storage/v1/object/public/micelleneous-images//splashscreen.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
@@ -44,7 +44,7 @@ const WelcomeScreen: React.FC = () => {
         <div className="grid grid-cols-3 gap-4 mb-12 w-full max-w-sm">
           <div className="text-center">
             <div 
-              className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-slate-800/40 flex items-center justify-center"
+              className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-slate-800/80 flex items-center justify-center"
               style={{
                 boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(148, 163, 184, 0.1)'
               }}
@@ -56,7 +56,7 @@ const WelcomeScreen: React.FC = () => {
           
           <div className="text-center">
             <div 
-              className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-slate-800/40 flex items-center justify-center"
+              className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-slate-800/80 flex items-center justify-center"
               style={{
                 boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(148, 163, 184, 0.1)'
               }}
@@ -68,7 +68,7 @@ const WelcomeScreen: React.FC = () => {
           
           <div className="text-center">
             <div 
-              className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-slate-800/40 flex items-center justify-center"
+              className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-slate-800/80 flex items-center justify-center"
               style={{
                 boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(148, 163, 184, 0.1)'
               }}

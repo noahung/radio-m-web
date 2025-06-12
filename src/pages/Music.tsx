@@ -48,7 +48,7 @@ const MusicPage: React.FC = () => {
           <NeumorphicButton
             variant="primary"
             size="lg"
-            className="w-full max-w-xs mx-auto"
+            className="w-full max-w-xs mx-auto bg-white/60"
           >
             Upgrade to Premium
           </NeumorphicButton>

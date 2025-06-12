@@ -53,7 +53,7 @@ const LoginScreen: React.FC = () => {
     <div 
       className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/30 to-slate-900 relative overflow-hidden"
       style={{
-        backgroundImage: `url('https://images.pexels.com/photos/1626481/pexels-photo-1626481.jpeg?w=800&h=1200&fit=crop')`,
+        backgroundImage: `url('https://qjdrfskuxgaohczizdyq.supabase.co/storage/v1/object/public/micelleneous-images//girl%20lisenting%20to%20music.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
