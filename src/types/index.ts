@@ -9,6 +9,7 @@ export interface RadioStation {
   current_track?: string;
   listeners_count?: number;
   created_at: string;
+  featured?: boolean; // Add this line
 }
 
 export interface User {

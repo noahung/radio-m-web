@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Volume2, Users, Heart } from 'lucide-react';
+import { ArrowLeft, Volume2, Users, Heart, Play, Pause } from 'lucide-react';
 import { usePlayer } from '../contexts/PlayerContext';
 import { getMyanmarTime } from '../utils/time';
 import CommentSection from '../components/Player/CommentSection';
@@ -9,7 +9,7 @@ import SleepTimer from '../components/Player/SleepTimer';
 const Player: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { playerState, setVolume } = usePlayer();
+  const { playerState, setVolume, pauseAudio, resumeAudio } = usePlayer();
   const [currentTime, setCurrentTime] = useState(getMyanmarTime());
   const [isCommentsCollapsed, setIsCommentsCollapsed] = useState(false);
   const [isFavourited, setIsFavourited] = useState(false);
@@ -116,21 +116,34 @@ const Player: React.FC = () => {
         {/* Volume Control */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
-            <Volume2 size={20} className="text-slate-400" />
             <span className="text-slate-400 text-sm">Volume</span>
             <span className="text-slate-300 text-sm ml-auto">
               {Math.round(playerState.volume * 100)}%
             </span>
           </div>
-          <div className="relative">
+          <div className="flex items-center gap-4">
+            {/* Play/Pause Button - 1/5 width */}
+            <button
+              className="flex-shrink-0 flex-grow-0 w-1/5 min-w-[48px] max-w-[64px] p-3 rounded-xl bg-blue-600/90 hover:bg-blue-700 shadow-lg transition-all flex items-center justify-center"
+              onClick={() => playerState.isPlaying ? pauseAudio() : resumeAudio()}
+              style={{ marginRight: '8px' }}
+            >
+              {playerState.isPlaying ? (
+                <Pause size={24} className="text-white" />
+              ) : (
+                <Play size={24} className="text-white" />
+              )}
+            </button>
+            {/* Volume Bar - 4/5 width */}
             <input
               type="range"
               min="0"
               max="1"
-              step="0.1"
+              step="0.01"
               value={playerState.volume}
               onChange={(e) => setVolume(parseFloat(e.target.value))}
-              className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
+              className="w-4/5 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
+              style={{ minWidth: 0 }}
             />
           </div>
         </div>

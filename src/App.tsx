@@ -44,6 +44,9 @@ const AuthenticatedApp: React.FC = () => {
           <Route path="/" element={<BottomNavigation />} />
           <Route path="/favourites" element={<BottomNavigation />} />
           <Route path="/music" element={<BottomNavigation />} />
+          {/* Show BottomNavigation on Player page as well */}
+          <Route path="/player" element={<BottomNavigation />} />
+          <Route path="/player/:id" element={<BottomNavigation />} />
         </Routes>
         <MiniPlayer />
       </div>

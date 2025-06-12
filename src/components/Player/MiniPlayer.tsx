@@ -1,16 +1,28 @@
 import React from 'react';
 import { usePlayer } from '../../contexts/PlayerContext';
-import { Pause, Play } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Pause, Play, Heart } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const MiniPlayer: React.FC = () => {
   const { playerState, pauseAudio, resumeAudio } = usePlayer();
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!playerState.currentStation) return null;
 
+  // Hide MiniPlayer on Player page
+  if (location.pathname.startsWith('/player')) return null;
+
   const isPlaying = playerState.isPlaying;
   const station = playerState.currentStation;
+  // TODO: Replace with real favourite state from backend or context
+  const [isFavourited, setIsFavourited] = React.useState(false);
+
+  const handleFavourite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFavourited((prev) => !prev);
+    // TODO: Call backend to add/remove favourite
+  };
 
   return (
     <div className="fixed bottom-20 left-0 right-0 z-40 px-0 flex justify-center pointer-events-none w-full max-w-full">
@@ -33,6 +45,12 @@ const MiniPlayer: React.FC = () => {
           onClick={e => { e.stopPropagation(); isPlaying ? pauseAudio() : resumeAudio(); }}
         >
           {isPlaying ? <Pause size={18} className="text-blue-400" /> : <Play size={18} className="text-slate-300" />}
+        </button>
+        <button
+          className="p-2 rounded-xl bg-slate-700/60 hover:bg-slate-600/80 transition-all"
+          onClick={handleFavourite}
+        >
+          <Heart size={18} className={isFavourited ? 'text-pink-400 fill-pink-400' : 'text-slate-300'} fill={isFavourited ? 'currentColor' : 'none'} />
         </button>
       </div>
     </div>

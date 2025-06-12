@@ -49,7 +49,8 @@ const Home: React.FC = () => {
         is_active: true,
         current_track: 'Traditional Myanmar Folk Song',
         listeners_count: 1247,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        featured: true
       },
       {
         id: '2',
@@ -61,7 +62,8 @@ const Home: React.FC = () => {
         is_active: true,
         current_track: 'Modern Burmese Pop',
         listeners_count: 892,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        featured: true
       },
       {
         id: '3',
@@ -109,14 +111,12 @@ const Home: React.FC = () => {
             Discover the best Burmese radio stations
           </p>
         </div>
-
         {error && (
           <div className="mb-6 p-4 bg-yellow-900/30 border border-yellow-700/30 rounded-2xl">
             <p className="text-yellow-400 text-sm">{error}</p>
             <p className="text-yellow-300 text-xs mt-1">Using demo stations</p>
           </div>
         )}
-
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3, 4].map((i) => (
@@ -140,13 +140,30 @@ const Home: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {stations.map((station) => (
-              <div key={station.id} onClick={() => { playStation(station); navigate(`/player`); }} className="cursor-pointer">
-                <StationCard station={station} />
+          <>
+            {/* Featured Stations Slider */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-white mb-3">Featured Stations</h3>
+              <div className="overflow-x-auto hide-scrollbar">
+                <div className="flex gap-4">
+                  {stations.filter(s => s.featured).map(station => (
+                    <div key={station.id} className="min-w-[180px] max-w-[220px]">
+                      <StationCard station={station} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+            {/* All Stations Grid */}
+            <h3 className="text-lg font-semibold text-white mb-3">All Stations</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {stations.map((station) => (
+                <div key={station.id} onClick={() => { playStation(station); navigate(`/player`); }} className="cursor-pointer">
+                  <StationCard station={station} />
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </main>
     </div>
