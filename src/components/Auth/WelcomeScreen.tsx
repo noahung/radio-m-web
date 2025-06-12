@@ -20,14 +20,7 @@ const WelcomeScreen: React.FC = () => {
       
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
         {/* Logo */}
-        <div 
-          className="w-24 h-24 mb-8 rounded-3xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"
-          style={{
-            boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.4), -4px -4px 12px rgba(148, 163, 184, 0.1)'
-          }}
-        >
-          <Radio size={32} className="text-white" />
-        </div>
+        {/* Removed the icon above Myanmar text as requested */}
 
         {/* Welcome Text */}
         <h1 className="text-4xl font-bold text-white mb-4">
