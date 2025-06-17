@@ -4,10 +4,12 @@ import { getRadioStations } from '../lib/supabase';
 import StationCard from '../components/RadioStation/StationCard';
 import Header from '../components/Layout/Header';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
+import SearchBar from '../components/UI/SearchBar';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const [stations, setStations] = useState<RadioStation[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -21,12 +23,10 @@ const Home: React.FC = () => {
       const { data, error } = await getRadioStations();
       if (error) {
         setError('Failed to load radio stations');
-        // Fallback to mock data
         loadMockStations();
       } else if (data) {
         setStations(data);
       } else {
-        // No data from Supabase, use mock data
         loadMockStations();
       }
     } catch (err) {
@@ -48,9 +48,6 @@ const Home: React.FC = () => {
         category: 'music',
         is_active: true,
         current_track: 'Traditional Myanmar Folk Song',
-        listeners_count: 1247,
-        created_at: new Date().toISOString(),
-        featured: true
       },
       {
         id: '2',
@@ -61,9 +58,6 @@ const Home: React.FC = () => {
         category: 'music',
         is_active: true,
         current_track: 'Modern Burmese Pop',
-        listeners_count: 892,
-        created_at: new Date().toISOString(),
-        featured: true
       },
       {
         id: '3',
@@ -74,8 +68,6 @@ const Home: React.FC = () => {
         category: 'talk',
         is_active: true,
         current_track: 'Morning News Update',
-        listeners_count: 2156,
-        created_at: new Date().toISOString()
       },
       {
         id: '4',
@@ -86,12 +78,15 @@ const Home: React.FC = () => {
         category: 'spiritual',
         is_active: true,
         current_track: 'Meditation Chants',
-        listeners_count: 634,
-        created_at: new Date().toISOString()
       }
     ];
     setStations(mockStations);
   };
+
+  const filteredStations = stations.filter(station => 
+    station.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    station.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const playStation = (station: RadioStation) => {
     // Implement the play functionality here
@@ -104,12 +99,11 @@ const Home: React.FC = () => {
       
       <main className="px-6 py-6 pb-24">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-2">
-            မင်္ဂလာပါ! Welcome
-          </h2>
-          <p className="text-slate-400">
-            Discover the best Burmese radio stations
-          </p>
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search radio stations..."
+          />
         </div>
         {error && (
           <div className="mb-6 p-4 bg-yellow-900/30 border border-yellow-700/30 rounded-2xl">
@@ -157,7 +151,7 @@ const Home: React.FC = () => {
             {/* All Stations Grid */}
             <h3 className="text-lg font-semibold text-white mb-3">All Stations</h3>
             <div className="grid grid-cols-2 gap-4">
-              {stations.map((station) => (
+              {filteredStations.map((station) => (
                 <div key={station.id} onClick={() => { playStation(station); navigate(`/player`); }} className="cursor-pointer">
                   <StationCard station={station} />
                 </div>
