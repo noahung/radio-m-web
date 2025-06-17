@@ -38,13 +38,13 @@ const WaitingListForm: React.FC = () => {
       <Header title="Join Waiting List" />      <main className="px-6 py-6 pb-24">
         <div className="max-w-2xl mx-auto mb-8 text-center">
           <h1 className="text-3xl font-bold text-white mb-4">Coming Soon: The Ultimate Burmese Music Experience</h1>
-          <p className="text-gray-300 mb-3">Our team is working hard to build Myanmar's largest digital music catalog, featuring thousands of carefully curated Burmese songs across all genres.</p>
+          <p className="text-gray-300 mb-3">Thar Htet is working hard to build Myanmar's largest digital music catalog, featuring thousands of carefully curated Burmese songs across all genres.</p>
           <p className="text-gray-300 mb-3">Get exclusive early access to:</p>
           <ul className="text-gray-300 mb-6 space-y-2">
             <li>✨ Thousands of traditional and modern Burmese songs</li>
             <li>🎵 High-quality, ad-free streaming</li>
             <li>📱 Offline listening on mobile devices</li>
-            <li>🎧 Curated playlists and personalized recommendations</li>
+            <li>🎧 Curated playlists and personalised recommendations</li>
           </ul>
         </div>
 
