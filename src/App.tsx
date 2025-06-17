@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { PlayerProvider } from './contexts/PlayerContext';
 import BottomNavigation from './components/Layout/BottomNavigation';
@@ -12,6 +12,7 @@ import LoginScreen from './components/Auth/LoginScreen';
 import SignUpScreen from './components/Auth/SignUpScreen';
 import ForgotPasswordScreen from './components/Auth/ForgotPasswordScreen';
 import GuestScreen from './components/Auth/GuestScreen';
+import WaitingListForm from './components/Auth/WaitingListForm';
 
 // Main App Components
 import Home from './pages/Home';
@@ -21,13 +22,14 @@ import Favourites from './pages/Favourites';
 import MusicPage from './pages/Music';
 
 const AuthenticatedApp: React.FC = () => {
-  return (
-    <PlayerProvider>
+  return (    <PlayerProvider>
       <div className="relative min-h-screen bg-slate-900">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/player" element={<Player />} />
           <Route path="/player/:id" element={<Player />} />
+          <Route path="/waiting-list" element={<WaitingListForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/music" element={<MusicPage />} />
@@ -36,12 +38,11 @@ const AuthenticatedApp: React.FC = () => {
           <Route path="/auth/signup" element={<SignUpScreen />} />
           <Route path="/auth/forgot-password" element={<ForgotPasswordScreen />} />
           <Route path="/auth/guest" element={<GuestScreen />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
-        
-        {/* Bottom Navigation - Show on main pages only */}
+          {/* Bottom Navigation - Show on main pages only */}
         <Routes>
-          <Route path="/" element={<BottomNavigation />} />
+          <Route path="/home" element={<BottomNavigation />} />
           <Route path="/favourites" element={<BottomNavigation />} />
           <Route path="/music" element={<BottomNavigation />} />
           {/* Show BottomNavigation on Player page as well */}

@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Layout/Header';
 import { Crown, Music } from 'lucide-react';
 import NeumorphicButton from '../components/UI/NeumorphicButton';
 
 const MusicPage: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
       <Header title="Premium Music" />
@@ -48,9 +51,10 @@ const MusicPage: React.FC = () => {
           <NeumorphicButton
             variant="primary"
             size="lg"
-            className="w-full max-w-xs mx-auto bg-white/60"
+            className="w-full max-w-xs mx-auto bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold"
+            onClick={() => navigate('/waiting-list')}
           >
-            Upgrade to Premium
+            Join the Waiting List
           </NeumorphicButton>
         </div>
       </main>
