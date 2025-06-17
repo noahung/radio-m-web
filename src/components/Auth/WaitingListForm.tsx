@@ -35,9 +35,20 @@ const WaitingListForm: React.FC = () => {
   };
 
   return (    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
-      <Header title="Join Waiting List" />
-      <main className="px-6 py-6 pb-24">
-        <div className="w-full max-w-md p-6 rounded-xl bg-[#1e293b] shadow-xl mx-auto mt-8">
+      <Header title="Join Waiting List" />      <main className="px-6 py-6 pb-24">
+        <div className="max-w-2xl mx-auto mb-8 text-center">
+          <h1 className="text-3xl font-bold text-white mb-4">Coming Soon: The Ultimate Burmese Music Experience</h1>
+          <p className="text-gray-300 mb-3">Our team is working hard to build Myanmar's largest digital music catalog, featuring thousands of carefully curated Burmese songs across all genres.</p>
+          <p className="text-gray-300 mb-3">Get exclusive early access to:</p>
+          <ul className="text-gray-300 mb-6 space-y-2">
+            <li>✨ Thousands of traditional and modern Burmese songs</li>
+            <li>🎵 High-quality, ad-free streaming</li>
+            <li>📱 Offline listening on mobile devices</li>
+            <li>🎧 Curated playlists and personalized recommendations</li>
+          </ul>
+        </div>
+
+        <div className="w-full max-w-md p-6 rounded-xl bg-[#1e293b] shadow-xl mx-auto">
           <h2 className="text-2xl font-bold text-center text-white mb-6">Join the Waiting List</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">

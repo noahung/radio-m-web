@@ -5,9 +5,8 @@ import { Home, Heart, Music } from 'lucide-react';
 const BottomNavigation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const navItems = [
-    { icon: Home, label: 'Home', path: '/' },
+    { icon: Home, label: 'Home', path: '/home' },
     { icon: Heart, label: 'Favourites', path: '/favourites' },
     { icon: Music, label: 'Music', path: '/music', premium: true }
   ];
