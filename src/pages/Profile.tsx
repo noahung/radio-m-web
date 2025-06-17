@@ -156,8 +156,7 @@ const Profile: React.FC = () => {
               Notifications
             </NeumorphicButton>
 
-            <NeumorphicButton
-              onClick={() => {}}
+            <NeumorphicButton              onClick={() => window.open('https://www.paypal.com/donate/?hosted_button_id=7VHQJMHHB85KN', '_blank')}
               variant="secondary"
               className="w-full justify-start"
               icon={Heart}

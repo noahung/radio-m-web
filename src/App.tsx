@@ -25,7 +25,7 @@ const AuthenticatedApp: React.FC = () => {
   return (    <PlayerProvider>
       <div className="relative min-h-screen bg-slate-900">
         <Routes>
-          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/" element={<Navigate to="/auth/welcome" replace />} />
           <Route path="/home" element={<Home />} />
           <Route path="/player" element={<Player />} />
           <Route path="/player/:id" element={<Player />} />

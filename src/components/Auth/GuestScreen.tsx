@@ -7,10 +7,9 @@ import NeumorphicButton from '../UI/NeumorphicButton';
 const GuestScreen: React.FC = () => {
   const navigate = useNavigate();
   const { continueAsGuest } = useAuth();
-
   const handleContinueAsGuest = () => {
     continueAsGuest();
-    navigate('/');
+    navigate('/home');
   };
 
   return (
