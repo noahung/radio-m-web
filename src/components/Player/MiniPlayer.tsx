@@ -66,8 +66,8 @@ const MiniPlayer: React.FC = () => {
   }, [playerState.currentStation]);
 
   if (!playerState.currentStation) return null;
-  // Show MiniPlayer only on Home and Music pages
-  const showMiniPlayer = ["/", "/music"].includes(location.pathname);
+  // Show MiniPlayer only on Home, Favourites, and Music pages
+  const showMiniPlayer = ["/home", "/favourites", "/music"].includes(location.pathname);
   if (!showMiniPlayer) return null;
 
   const isPlaying = playerState.isPlaying;
