@@ -1,37 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Edit3, 
-  Bell, 
-  Heart, 
-  LogOut, 
+import {
+  ArrowLeft,
+  Edit3,
+  Bell,
+  Heart,
+  LogOut,
   Camera,
   Save
 } from 'lucide-react';
 import NeumorphicButton from '../components/UI/NeumorphicButton';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+
+const countryList = [
+  { name: 'Myanmar', emoji: '🇲🇲' },
+  { name: 'United States', emoji: '🇺🇸' },
+  { name: 'Japan', emoji: '🇯🇵' },
+  // ...add more countries as needed
+];
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { authState, signOut } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
-    username: 'Aung Kyaw',
-    status: 'Music lover from Yangon',
-    country: 'Myanmar 🇲🇲',
+  const [profile, setProfile] = useState<{
+    username: string;
+    status: string;
+    country: string;
+    avatar_url: string | null;
+  }>({
+    username: '',
+    status: '',
+    country: '',
     avatar_url: null
   });
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSave = () => {
+  useEffect(() => {
+    if (!authState.isAuthenticated || !authState.user) {
+      setLoading(false);
+      return;
+    }
+    const fetchProfile = async () => {
+      const { data } = await supabase
+        .from('users')
+        .select('username, status, country, avatar_url')
+        .eq('id', authState.user!.id)
+        .single();
+      if (data) {
+        setProfile({
+          username: data.username || '',
+          status: data.status || '',
+          country: data.country || '',
+          avatar_url: data.avatar_url || null
+        });
+      }
+      setLoading(false);
+    };
+    fetchProfile();
+  }, [authState]);
+
+  const handleSave = async () => {
     setIsEditing(false);
-    // Here you would save to Supabase
+    if (!authState.user) return;
+    await supabase
+      .from('users')
+      .update({
+        username: profile.username,
+        status: profile.status,
+        country: profile.country,
+        avatar_url: profile.avatar_url
+      })
+      .eq('id', authState.user.id);
   };
 
   const handleLogout = async () => {
     await signOut();
     navigate('/auth/welcome');
   };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !authState.user) return;
+    setUploading(true);
+    const file = e.target.files[0];
+    const fileExt = file.name.split('.').pop();
+    const filePath = `profile-pictures/${authState.user.id}.${fileExt}`;
+    const { error: uploadError } = await supabase.storage.from('profile-pictures').upload(filePath, file, { upsert: true });
+    if (!uploadError) {
+      const { data } = supabase.storage.from('profile-pictures').getPublicUrl(filePath);
+      setProfile((prev) => ({ ...prev, avatar_url: data.publicUrl || null }));
+    }
+    setUploading(false);
+  };
+
+  if (loading) {
+    return <div className="flex justify-center items-center min-h-screen text-white">Loading...</div>;
+  }
+
+  if (!authState.isAuthenticated || authState.user?.is_guest) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold text-white mb-4">Guest User</h1>
+        <button
+          className="mb-2 px-6 py-2 rounded-xl bg-blue-600 text-white font-semibold shadow-lg"
+          onClick={() => navigate('/auth/login')}
+        >Login</button>
+        <button
+          className="px-6 py-2 rounded-xl bg-green-600 text-white font-semibold shadow-lg"
+          onClick={() => navigate('/auth/signup')}
+        >Create Account</button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
@@ -46,9 +129,7 @@ const Profile: React.FC = () => {
           >
             <ArrowLeft size={20} className="text-slate-400" />
           </button>
-          
           <h1 className="text-xl font-bold text-white">Profile</h1>
-          
           <NeumorphicButton
             onClick={isEditing ? handleSave : () => setIsEditing(true)}
             variant="primary"
@@ -57,11 +138,10 @@ const Profile: React.FC = () => {
           />
         </div>
       </header>
-
       <main className="px-6 py-6 pb-24">
         {/* Avatar Section */}
         <div className="text-center mb-8">
-          <div 
+          <div
             className="relative w-32 h-32 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center"
             style={{
               boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.4), -4px -4px 12px rgba(148, 163, 184, 0.1)'
@@ -78,102 +158,84 @@ const Profile: React.FC = () => {
                 {profile.username.charAt(0).toUpperCase()}
               </span>
             )}
-            
             {isEditing && (
-              <button className="absolute -bottom-2 -right-2 p-2 bg-blue-500 rounded-2xl shadow-lg">
-                <Camera size={16} className="text-white" />
+              <button
+                className="absolute bottom-2 right-2 bg-slate-900/80 p-2 rounded-full shadow"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                <Camera size={20} className="text-white" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleAvatarChange}
+                />
               </button>
             )}
           </div>
         </div>
-
-        {/* Profile Form */}
-        <div className="space-y-6 mb-8">
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">
-              Username
-            </label>
-            <input
-              type="text"
-              value={profile.username}
-              onChange={(e) => setProfile(prev => ({ ...prev, username: e.target.value }))}
-              disabled={!isEditing}
-              className="w-full px-4 py-3 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 disabled:opacity-60"
-              style={{
-                boxShadow: isEditing 
-                  ? 'inset 2px 2px 4px rgba(0, 0, 0, 0.3)'
-                  : '4px 4px 8px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(148, 163, 184, 0.1)'
-              }}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">
-              Status
-            </label>
-            <input
-              type="text"
-              value={profile.status}
-              onChange={(e) => setProfile(prev => ({ ...prev, status: e.target.value }))}
-              disabled={!isEditing}
-              className="w-full px-4 py-3 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 disabled:opacity-60"
-              style={{
-                boxShadow: isEditing 
-                  ? 'inset 2px 2px 4px rgba(0, 0, 0, 0.3)'
-                  : '4px 4px 8px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(148, 163, 184, 0.1)'
-              }}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">
-              Country
-            </label>
-            <input
-              type="text"
-              value={profile.country}
-              onChange={(e) => setProfile(prev => ({ ...prev, country: e.target.value }))}
-              disabled={!isEditing}
-              className="w-full px-4 py-3 bg-slate-800/40 border border-slate-700/30 rounded-2xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 disabled:opacity-60"
-              style={{
-                boxShadow: isEditing 
-                  ? 'inset 2px 2px 4px rgba(0, 0, 0, 0.3)'
-                  : '4px 4px 8px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(148, 163, 184, 0.1)'
-              }}
-            />
-          </div>
+        {/* Username */}
+        <div className="mb-4">
+          <label className="block text-slate-400 mb-1">Username</label>
+          <input
+            type="text"
+            className="w-full px-4 py-3 rounded-xl bg-slate-800/60 text-white focus:outline-none"
+            value={profile.username}
+            disabled={!isEditing}
+            onChange={e => setProfile(p => ({ ...p, username: e.target.value }))}
+          />
         </div>
-
-        {/* Menu Options */}
-        {!isEditing && (
-          <div className="space-y-4">
-            <NeumorphicButton
-              onClick={() => {}}
-              variant="secondary"
-              className="w-full justify-start"
-              icon={Bell}
+        {/* Status */}
+        <div className="mb-4">
+          <label className="block text-slate-400 mb-1">Status</label>
+          <input
+            type="text"
+            className="w-full px-4 py-3 rounded-xl bg-slate-800/60 text-white focus:outline-none"
+            value={profile.status}
+            disabled={!isEditing}
+            onChange={e => setProfile(p => ({ ...p, status: e.target.value }))}
+          />
+        </div>
+        {/* Country */}
+        <div className="mb-8">
+          <label className="block text-slate-400 mb-1">Country</label>
+          {isEditing ? (
+            <select
+              className="w-full px-4 py-3 rounded-xl bg-slate-800/60 text-white focus:outline-none"
+              value={profile.country}
+              onChange={e => setProfile(p => ({ ...p, country: e.target.value }))}
             >
-              Notifications
-            </NeumorphicButton>
-
-            <NeumorphicButton              onClick={() => window.open('https://www.paypal.com/donate/?hosted_button_id=7VHQJMHHB85KN', '_blank')}
-              variant="secondary"
-              className="w-full justify-start"
-              icon={Heart}
-            >
-              Donate
-            </NeumorphicButton>
-
-            <NeumorphicButton
-              onClick={handleLogout}
-              variant="secondary"
-              className="w-full justify-start text-red-400"
-              icon={LogOut}
-            >
-              Log Out
-            </NeumorphicButton>
-          </div>
-        )}
+              <option value="">Select Country</option>
+              {countryList.map(c => (
+                <option key={c.name} value={`${c.name} ${c.emoji}`}>{c.name} {c.emoji}</option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="text"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800/60 text-white focus:outline-none"
+              value={profile.country}
+              disabled
+            />
+          )}
+        </div>
+        <NeumorphicButton
+          onClick={() => alert('Notifications feature coming soon!')}
+          icon={Bell}
+          className="w-full mb-4"
+        >Notifications</NeumorphicButton>
+        <NeumorphicButton
+          onClick={() => alert('Donate feature coming soon!')}
+          icon={Heart}
+          className="w-full mb-4"
+        >Donate</NeumorphicButton>
+        <NeumorphicButton
+          onClick={handleLogout}
+          icon={LogOut}
+          className="w-full"
+        >Log Out</NeumorphicButton>
       </main>
     </div>
   );

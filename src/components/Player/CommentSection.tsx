@@ -164,6 +164,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ stationId, isCollapsed,
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm font-medium text-white truncate">
                         {comment.user?.username || 'Anonymous'}
+                        {comment.country ? ` ${comment.country.split(' ').slice(-1)[0]}` : ''}
                       </span>
                       <span className="text-xs text-slate-500 flex-shrink-0">
                         {new Date(comment.created_at).toLocaleTimeString([], {

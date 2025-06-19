@@ -20,6 +20,7 @@ import Player from './pages/Player';
 import Profile from './pages/Profile';
 import Favourites from './pages/Favourites';
 import MusicPage from './pages/Music';
+import AuthCallback from './pages/AuthCallback';
 
 const AuthenticatedApp: React.FC = () => {
   return (    <PlayerProvider>
@@ -38,6 +39,7 @@ const AuthenticatedApp: React.FC = () => {
           <Route path="/auth/signup" element={<SignUpScreen />} />
           <Route path="/auth/forgot-password" element={<ForgotPasswordScreen />} />
           <Route path="/auth/guest" element={<GuestScreen />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
           {/* Bottom Navigation - Show on main pages only */}

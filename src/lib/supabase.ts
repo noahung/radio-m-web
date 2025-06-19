@@ -35,6 +35,31 @@ export const signInWithGoogle = async () => {
   return { data, error };
 };
 
+// After Google sign-in, ensure user profile exists in DB
+export const handleOAuthCallback = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user) {
+    // Check if user profile exists
+    const { data: profile } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+    if (!profile) {
+      // Create user profile
+      await supabase.from('users').insert({
+        id: session.user.id,
+        email: session.user.email,
+        username: session.user.user_metadata?.name || session.user.email.split('@')[0],
+        full_name: session.user.user_metadata?.full_name || '',
+        avatar_url: session.user.user_metadata?.avatar_url || null,
+        status: '',
+        country: ''
+      });
+    }
+  }
+};
+
 export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
   return { error };
