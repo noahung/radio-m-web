@@ -102,16 +102,80 @@ const Profile: React.FC = () => {
 
   if (!authState.isAuthenticated || authState.user?.is_guest) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold text-white mb-4">Guest User</h1>
-        <button
-          className="mb-2 px-6 py-2 rounded-xl bg-blue-600 text-white font-semibold shadow-lg"
-          onClick={() => navigate('/auth/login')}
-        >Login</button>
-        <button
-          className="px-6 py-2 rounded-xl bg-green-600 text-white font-semibold shadow-lg"
-          onClick={() => navigate('/auth/signup')}
-        >Create Account</button>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+        <header className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-lg border-b border-slate-700/50">
+          <div className="flex items-center justify-between px-6 py-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 rounded-2xl bg-slate-800/40 shadow-lg shadow-slate-900/30"
+              style={{
+                boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.3), -2px -2px 6px rgba(148, 163, 184, 0.1)'
+              }}
+            >
+              <ArrowLeft size={20} className="text-slate-400" />
+            </button>
+            <h1 className="text-xl font-bold text-white">Profile</h1>
+            <div className="w-10"></div>
+          </div>
+        </header>
+        <main className="px-6 py-6 pb-24">
+          <div className="mb-4 p-3 bg-yellow-900/30 border border-yellow-700/30 rounded-xl text-yellow-300 text-center font-semibold">
+            You are browsing as a guest. <button onClick={() => navigate('/auth/login')} className="underline text-yellow-200">Sign in</button> or <button onClick={() => navigate('/auth/signup')} className="underline text-yellow-200">Create Account</button> for full access.
+          </div>
+          <div className="text-center mb-8">
+            <div
+              className="relative w-32 h-32 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center"
+              style={{
+                boxShadow: '8px 8px 16px rgba(0, 0, 0, 0.4), -4px -4px 12px rgba(148, 163, 184, 0.1)'
+              }}
+            >
+              <span className="text-3xl font-bold text-white">G</span>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-slate-400 mb-1">Username</label>
+            <input
+              type="text"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800/60 text-white focus:outline-none"
+              value="Guest User"
+              disabled
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-slate-400 mb-1">Status</label>
+            <input
+              type="text"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800/60 text-white focus:outline-none"
+              value="Browsing as guest"
+              disabled
+            />
+          </div>
+          <div className="mb-8">
+            <label className="block text-slate-400 mb-1">Country</label>
+            <input
+              type="text"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800/60 text-white focus:outline-none"
+              value="-"
+              disabled
+            />
+          </div>
+          <NeumorphicButton
+            onClick={() => navigate('/auth/login')}
+            icon={LogOut}
+            className="w-full mb-4 bg-blue-700 text-white font-bold"
+          >Sign In</NeumorphicButton>
+          <NeumorphicButton
+            onClick={() => alert('Notifications feature coming soon!')}
+            icon={Bell}
+            className="w-full mb-4"
+            disabled
+          >Notifications</NeumorphicButton>
+          <NeumorphicButton
+            onClick={() => window.open('https://www.paypal.com/donate/?hosted_button_id=7VHQJMHHB85KN', '_blank')}
+            icon={Heart}
+            className="w-full mb-4"
+          >Donate</NeumorphicButton>
+        </main>
       </div>
     );
   }
@@ -227,7 +291,7 @@ const Profile: React.FC = () => {
           className="w-full mb-4"
         >Notifications</NeumorphicButton>
         <NeumorphicButton
-          onClick={() => alert('Donate feature coming soon!')}
+          onClick={() => window.open('https://www.paypal.com/donate/?hosted_button_id=7VHQJMHHB85KN', '_blank')}
           icon={Heart}
           className="w-full mb-4"
         >Donate</NeumorphicButton>

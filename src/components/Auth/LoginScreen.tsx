@@ -4,10 +4,12 @@ import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import NeumorphicButton from '../UI/NeumorphicButton';
 import LoadingSpinner from '../UI/LoadingSpinner';
+import { useToast } from "../UI/ToastProvider";
 
 const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
   const { signIn, signInWithGoogle } = useAuth();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -26,6 +28,7 @@ const LoginScreen: React.FC = () => {
       if (error) {
         setError(error.message);
       } else {
+        showToast('Successfully signed in!');
         navigate('/');
       }
     } catch (err) {
@@ -41,6 +44,8 @@ const LoginScreen: React.FC = () => {
       const { error } = await signInWithGoogle();
       if (error) {
         setError(error.message);
+      } else {
+        showToast('Successfully signed in!');
       }
     } catch (err) {
       setError('Google sign-in failed');
