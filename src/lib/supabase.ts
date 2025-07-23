@@ -49,6 +49,10 @@ export const handleOAuthCallback = async () => {
       // Prepare required fields
       const id = session.user.id;
       const email = session.user.email;
+      if (!email) {
+        console.error('Email is undefined for user:', session.user);
+        return;
+      }
       let username = session.user.user_metadata?.name || email.split('@')[0];
       const full_name = session.user.user_metadata?.full_name || '';
       const avatar_url = session.user.user_metadata?.avatar_url || null;
@@ -76,7 +80,7 @@ export const handleOAuthCallback = async () => {
 
       // Only insert if all required fields are present
       if (id && email && uniqueUsername && full_name !== undefined) {
-        const { error } = await supabase.from('users').insert({
+        const userData = {
           id,
           email,
           username: uniqueUsername,
@@ -84,9 +88,12 @@ export const handleOAuthCallback = async () => {
           avatar_url,
           status,
           country
-        });
+        };
+        const { error } = await supabase.from('users').insert(userData);
         if (error) {
-          console.error('Error inserting user profile:', error.message);
+          console.error('Error inserting user profile:', error.message, { userData, error });
+        } else {
+          console.log('User profile inserted successfully:', userData);
         }
       } else {
         console.error('Missing required user fields for insert:', { id, email, uniqueUsername, full_name });
