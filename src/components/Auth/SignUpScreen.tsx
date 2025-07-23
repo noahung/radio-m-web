@@ -49,8 +49,8 @@ const SignUpScreen: React.FC = () => {
       if (error) {
         setError(error.message);
       } else {
-        showToast('Account created! Please check your email to verify.');
-        navigate('/');
+        showToast('Account created successfully!');
+        navigate('/home');
       }
     } catch (err) {
       setError('An unexpected error occurred');

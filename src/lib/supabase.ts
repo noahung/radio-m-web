@@ -12,7 +12,8 @@ export const signUp = async (email: string, password: string, userData: any) => 
     email,
     password,
     options: {
-      data: userData
+      data: userData,
+      emailRedirectTo: `${window.location.origin}/radio-m-web/home`
     }
   });
   return { data, error };
@@ -110,7 +111,7 @@ export const signOut = async () => {
 
 export const resetPassword = async (email: string) => {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/auth/reset-password`
+    redirectTo: `${window.location.origin}/radio-m-web/auth/reset-password`
   });
   return { data, error };
 };

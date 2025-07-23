@@ -29,7 +29,7 @@ const LoginScreen: React.FC = () => {
         setError(error.message);
       } else {
         showToast('Successfully signed in!');
-        navigate('/');
+        navigate('/home');
       }
     } catch (err) {
       setError('An unexpected error occurred');

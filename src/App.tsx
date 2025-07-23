@@ -91,7 +91,10 @@ function App() {
   return (
     <Router basename="/radio-m-web">
       <AuthProvider>
-        <AppContent />
+        <Routes>
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="*" element={<AppContent />} />
+        </Routes>
       </AuthProvider>
     </Router>
   );

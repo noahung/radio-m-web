@@ -95,31 +95,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string, userData: any) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: userData
-      }
-    });
-
-    if (data.user && !error) {
-      // Create user profile
-      await supabase.from('users').insert([
-        {
-          id: data.user.id,
-          email: data.user.email,
-          username: userData.username,
-          full_name: userData.full_name,
-          status: userData.status || 'Music lover',
-          country: userData.country || 'Myanmar 🇲🇲',
-          is_premium: false,
-          is_guest: false
-        }
-      ]);
+    // Use the signUp function from supabase.ts which handles user creation and auto sign-in
+    const result = await import('../lib/supabase').then(m => m.signUp(email, password, userData));
+    
+    // If signup was successful and user is signed in, update auth state
+    if (result.data?.session?.user) {
+      const { data: profile } = await getUserProfile(result.data.session.user.id);
+      setAuthState({
+        user: profile,
+        isLoading: false,
+        isAuthenticated: true,
+        isGuest: false
+      });
     }
-
-    return { data, error };
+    
+    return result;
   };
 
   const signIn = async (email: string, password: string) => {
