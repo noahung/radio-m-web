@@ -7,14 +7,21 @@ const AuthCallback = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('OAuth callback hash:', window.location.hash);
     const finishOAuth = async () => {
       try {
-        await handleOAuthCallback();
-        navigate('/home');
+        // Always call getSession to ensure Supabase picks up the session from the URL hash
+        const { data: { session } } = await import('../lib/supabase').then(m => m.supabase.auth.getSession());
+        if (session && session.user) {
+          // Session is valid, redirect to home
+          navigate('/home');
+        } else {
+          setError('Authentication failed: No session found.');
+          setTimeout(() => navigate('/auth/login'), 3000);
+        }
       } catch (err) {
         console.error('OAuth callback error:', err);
         setError(err instanceof Error ? err.message : JSON.stringify(err));
-        // Redirect to login after 3 seconds if there's an error
         setTimeout(() => navigate('/auth/login'), 3000);
       }
     };
