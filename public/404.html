@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <title>Myanmar Radio</title>
     <script type="text/javascript">
-      // Redirect all requests to index.html for SPA routing
-      var redirect = '/radio-m-web' + location.pathname + location.search + location.hash;
-      location.replace(redirect);
+      // Only prepend /radio-m-web if not already present
+      var prefix = '/radio-m-web';
+      var path = location.pathname;
+      if (!path.startsWith(prefix)) {
+        location.replace(prefix + path + location.search + location.hash);
+      } // else: do nothing, let the SPA load
     </script>
   </head>
   <body>
