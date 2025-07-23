@@ -10,10 +10,11 @@ const AuthCallback = () => {
     console.log('OAuth callback hash:', window.location.hash);
     const finishOAuth = async () => {
       try {
-        // Always call getSession to ensure Supabase picks up the session from the URL hash
+        // Ensure user profile is created in public.users
+        await handleOAuthCallback();
+        // Check session again and redirect
         const { data: { session } } = await import('../lib/supabase').then(m => m.supabase.auth.getSession());
         if (session && session.user) {
-          // Session is valid, redirect to home
           navigate('/home');
         } else {
           setError('Authentication failed: No session found.');
