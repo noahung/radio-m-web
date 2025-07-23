@@ -13,7 +13,7 @@ const AuthCallback = () => {
         navigate('/home');
       } catch (err) {
         console.error('OAuth callback error:', err);
-        setError(err instanceof Error ? err.message : 'Failed to complete authentication');
+        setError(err instanceof Error ? err.message : JSON.stringify(err));
         // Redirect to login after 3 seconds if there's an error
         setTimeout(() => navigate('/auth/login'), 3000);
       }
