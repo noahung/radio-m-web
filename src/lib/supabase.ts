@@ -46,16 +46,51 @@ export const handleOAuthCallback = async () => {
       .eq('id', session.user.id)
       .single();
     if (!profile) {
-      // Create user profile
-      await supabase.from('users').insert({
-        id: session.user.id,
-        email: session.user.email,
-        username: session.user.user_metadata?.name || session.user.email.split('@')[0],
-        full_name: session.user.user_metadata?.full_name || '',
-        avatar_url: session.user.user_metadata?.avatar_url || null,
-        status: '',
-        country: ''
-      });
+      // Prepare required fields
+      const id = session.user.id;
+      const email = session.user.email;
+      let username = session.user.user_metadata?.name || email.split('@')[0];
+      const full_name = session.user.user_metadata?.full_name || '';
+      const avatar_url = session.user.user_metadata?.avatar_url || null;
+      const status = '';
+      const country = '';
+
+      // Ensure username is unique
+      let uniqueUsername = username;
+      let suffix = 1;
+      while (true) {
+        const { data: existingUser } = await supabase
+          .from('users')
+          .select('id')
+          .eq('username', uniqueUsername)
+          .single();
+        if (!existingUser) break;
+        uniqueUsername = `${username}_${Math.floor(Math.random() * 10000)}`;
+        suffix++;
+        if (suffix > 5) {
+          // Fallback to uuid if too many attempts
+          uniqueUsername = `${username}_${id.substring(0, 8)}`;
+          break;
+        }
+      }
+
+      // Only insert if all required fields are present
+      if (id && email && uniqueUsername && full_name !== undefined) {
+        const { error } = await supabase.from('users').insert({
+          id,
+          email,
+          username: uniqueUsername,
+          full_name,
+          avatar_url,
+          status,
+          country
+        });
+        if (error) {
+          console.error('Error inserting user profile:', error.message);
+        }
+      } else {
+        console.error('Missing required user fields for insert:', { id, email, uniqueUsername, full_name });
+      }
     }
   }
 };
